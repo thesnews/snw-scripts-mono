@@ -11,11 +11,13 @@ searchPath = args.directory
 
 for root, dirs, files in os.walk(searchPath):
     for file in files:
-        if file.endswith('.tpl'):
+        if file.endswith('.tpl') or file.endswith('.twig') or file.endswith('.html'):
             with open(os.path.join(root, file), 'r') as f:
                 content = f.read()
-                faSearch = re.search(r'<i class(Name)?="[^"]* (fa-.[^"]*?)( |")>', content)
-                if faSearch != None:
-                    print("%s: %s" % (os.path.join(root, file), faSearch.group(2)))
+                faSearch = re.findall(r'<i class(Name)?="([^"]* (fa-.[^"]*?))( |")>', content)
+                if len(faSearch) > 0:
+                    print("%s:" % os.path.join(root, file))
+                    for match in faSearch:
+                        print("\t%s" % match[1])
 
 print('\n')
